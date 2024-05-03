@@ -13,7 +13,7 @@ import com.example.bloodbank_compose.screens.SignupScreen
 fun BloodbankNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = BloodbankScreens.AboutUs.name) {
+    NavHost(navController = navController, startDestination = BloodbankScreens.LoginScreen.name) {
         composable(BloodbankScreens.LoginScreen.name) { LoginScreen(navController) }
         composable(BloodbankScreens.SignupScreen.name) { SignupScreen(navController) }
         composable(BloodbankScreens.AboutUs.name) { AboutUsScreen(navController) }

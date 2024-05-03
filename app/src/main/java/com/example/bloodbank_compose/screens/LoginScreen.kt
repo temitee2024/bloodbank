@@ -62,23 +62,8 @@ import kotlin.math.sqrt
 
 @Composable
 fun LoginScreen(navController: NavController){
-//
-//    Column(
-//        modifier = Modifier
-//            .background(
-//                color = Color.White
-//            )
-//            .fillMaxWidth()
-//            .fillMaxHeight()
-//    ) {
-//
-//        CustomButton(text = "sign up", onClick = {
-//
-//            navController.navigate(BloodbankScreens.SignupScreen.name)
-//        })
-//    }
 
-
+    val textState = remember { mutableStateOf(TextFieldValue()) }
     Column(
         modifier = Modifier
     ) {
@@ -113,7 +98,7 @@ fun LoginScreen(navController: NavController){
                     .wrapContentHeight()
                     .padding(16.dp)
             ) {
-                val textState = remember { mutableStateOf(TextFieldValue()) }
+
 
                 OutlinedTextField(
                     value = textState.value, onValueChange = {
