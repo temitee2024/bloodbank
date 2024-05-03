@@ -1,5 +1,7 @@
 package com.example.bloodbank_compose.screens.AuthScreens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,9 +37,26 @@ import com.example.bloodbank_compose.R
 import com.example.bloodbank_compose.components.CustomButton
 import com.example.bloodbank_compose.navigation.BloodbankScreens
 import com.example.bloodbank_compose.ui.theme.Purple80
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 @Composable
-fun SignupScreen(navController: NavController){
+fun SignupScreen(navController: NavController,
+                 viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
+
+    val name = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
+
+    val password = remember { mutableStateOf("") }
+    val phone = remember { mutableStateOf("") }
+    val repassword = remember { mutableStateOf("") }
+
+
+    val isLoading = viewModel.isLoading
+
+    var contest = LocalContext.current
+    var loginErr = viewModel.loginErr
+
     Column(
         modifier = Modifier
     ) {
@@ -71,13 +91,13 @@ fun SignupScreen(navController: NavController){
                     .wrapContentHeight()
                     .padding(16.dp)
             ) {
-                val textState = remember { mutableStateOf(TextFieldValue()) }
+
 
 
 
                 OutlinedTextField(
-                    value = textState.value, onValueChange = {
-                        textState.value = it
+                    value = name.value, onValueChange = {
+                        name.value = it
                     }, modifier = Modifier
                         .fillMaxWidth()
                         .border(1.dp, color = Purple80),
@@ -87,8 +107,8 @@ fun SignupScreen(navController: NavController){
 
 
                 OutlinedTextField(
-                    value = textState.value, onValueChange = {
-                        textState.value = it
+                    value = email.value, onValueChange = {
+                        email.value = it
                     }, modifier = Modifier
                         .fillMaxWidth()
                         .border(1.dp, color = Purple80),
@@ -96,8 +116,8 @@ fun SignupScreen(navController: NavController){
 
                     )
                 OutlinedTextField(
-                    value = textState.value, onValueChange = {
-                        textState.value = it
+                    value = phone.value, onValueChange = {
+                        phone.value = it
                     }, modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth()
@@ -109,8 +129,8 @@ fun SignupScreen(navController: NavController){
                     )
 
                 OutlinedTextField(
-                    value = textState.value, onValueChange = {
-                        textState.value = it
+                    value = password.value, onValueChange = {
+                        password.value = it
                     }, modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth()
@@ -121,8 +141,8 @@ fun SignupScreen(navController: NavController){
 
                     )
                 OutlinedTextField(
-                    value = textState.value, onValueChange = {
-                        textState.value = it
+                    value = repassword.value, onValueChange = {
+                        repassword.value = it
                     }, modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth()
@@ -136,7 +156,28 @@ fun SignupScreen(navController: NavController){
                 Spacer(modifier = Modifier.height(30.dp))
                 CustomButton(text = "Login", onClick = {
 
-                    navController.navigate(BloodbankScreens.AboutUs.name)
+Log.d("tag", "${password.value}/${repassword.value}")
+                    if( name.value. isEmpty() or password.value.isEmpty() or  phone.value.isEmpty() or email.value.isEmpty()){
+                        Toast.makeText(
+                            contest,
+                            "All field must be filled",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    } else if (password.value != repassword.value) {
+                        Toast.makeText(
+                            contest,
+                            "password does not match",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                    else {
+                        viewModel.createUserWithEmailAndPassword(email = email.value, password.value, name.value, phone.value) {
+                            navController.navigate(BloodbankScreens.AboutUs.name)
+                        }
+                    }
+
                 })
                 Spacer(modifier = Modifier.height(30.dp))
 
@@ -156,6 +197,14 @@ fun SignupScreen(navController: NavController){
 
                 )
 
+                if (loginErr.isNotEmpty()) {
+                    Toast.makeText(contest, loginErr, Toast.LENGTH_SHORT).show()
+
+                    Timer().schedule(5000) {
+                        //do something
+                        loginErr = ""
+                    }
+                }
             }
 
         }
