@@ -1,6 +1,7 @@
 package com.example.bloodbank_compose.screens.AuthScreens
 
 import android.provider.CalendarContract
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,6 +38,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -54,6 +56,8 @@ import com.example.bloodbank_compose.components.InputText
 import com.example.bloodbank_compose.navigation.BloodbankScreens
 import com.example.bloodbank_compose.ui.theme.Purple80
 import java.lang.Math.cos
+import java.util.Timer
+import kotlin.concurrent.schedule
 import kotlin.math.PI
 import kotlin.math.min
 import kotlin.math.pow
@@ -61,9 +65,17 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @Composable
-fun LoginScreen(navController: NavController){
+fun LoginScreen(navController: NavController,
+                viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
 
-    val textState = remember { mutableStateOf(TextFieldValue()) }
+    val textState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
+
+
+    val isLoading = viewModel.isLoading
+
+    var contest = LocalContext.current
+    var loginErr = viewModel.loginErr
     Column(
         modifier = Modifier
     ) {
@@ -111,8 +123,8 @@ fun LoginScreen(navController: NavController){
                 )
 
                 OutlinedTextField(
-                    value = textState.value, onValueChange = {
-                        textState.value = it
+                    value = passwordState.value, onValueChange = {
+                        passwordState.value = it
                     }, modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth()
@@ -123,9 +135,29 @@ fun LoginScreen(navController: NavController){
                     
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                CustomButton(text = "Login", onClick = {
-                    navController.navigate(BloodbankScreens.AboutUs.name)
-                })
+
+                if (isLoading) {
+                    CircularProgressIndicator()
+                }else {
+                    CustomButton(text = "Login", onClick = {
+
+
+
+
+                        if(textState.value. isEmpty() or passwordState.value.isEmpty()){
+                            Toast.makeText(
+                                contest,
+                                "password or email cannot be emoty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }else {
+                            viewModel.signInWithEmailAndPassword(textState.value, passwordState.value) {
+                                navController.navigate(BloodbankScreens.AboutUs.name)
+                            }
+                        }
+                    })
+                }
+
                 Spacer(modifier = Modifier.height(30.dp))
                 Text(
                     text = "Create an account",
@@ -142,6 +174,14 @@ fun LoginScreen(navController: NavController){
 
                 )
 
+                if (loginErr.isNotEmpty()) {
+                    Toast.makeText(contest, loginErr, Toast.LENGTH_SHORT).show()
+
+                    Timer().schedule(5000){
+                        //do something
+                        loginErr = ""
+                    }
+                }
             }
 
         }
