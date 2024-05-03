@@ -1,4 +1,4 @@
-package com.example.bloodbank_compose.screens
+package com.example.bloodbank_compose.screens.AuthScreens
 
 import android.provider.CalendarContract
 import androidx.compose.foundation.Image

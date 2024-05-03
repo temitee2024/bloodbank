@@ -1,4 +1,4 @@
-package com.example.bloodbank_compose.screens
+package com.example.bloodbank_compose.screens.AuthScreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
