@@ -152,7 +152,7 @@ fun LoginScreen(navController: NavController,
                             ).show()
                         }else {
                             viewModel.signInWithEmailAndPassword(textState.value, passwordState.value) {
-                                navController.navigate(BloodbankScreens.AboutUs.name)
+                                navController.navigate(BloodbankScreens.BookAppontment.name)
                             }
                         }
                     })
