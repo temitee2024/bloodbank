@@ -177,7 +177,7 @@ fun LoginScreen(navController: NavController,
                 if (loginErr.isNotEmpty()) {
                     Toast.makeText(contest, loginErr, Toast.LENGTH_SHORT).show()
 
-                    Timer().schedule(5000){
+                    Timer().schedule(3000){
                         //do something
                         loginErr = ""
                     }
