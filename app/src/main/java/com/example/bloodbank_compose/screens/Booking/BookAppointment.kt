@@ -2,6 +2,7 @@ package com.example.bloodbank_compose.screens.Booking
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,18 +48,28 @@ import androidx.navigation.NavController
 import com.example.bloodbank_compose.components.CustomButton
 import com.example.bloodbank_compose.navigation.BloodbankScreens
 import com.example.bloodbank_compose.navigation.BottomNavigation
+import com.example.bloodbank_compose.screens.AuthScreens.LoginScreenViewModel
 import com.example.bloodbank_compose.ui.theme.Purple80
 import com.example.bloodbank_compose.util.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreen(navController: NavController){
+fun BookingScreen(navController: NavController,
+                  viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
 
-    val textState = remember { mutableStateOf(TextFieldValue()) }
+
     val state = rememberScrollState()
-    val showDateDialog = remember { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
     val date = remember { mutableStateOf("") }
+
+    val name = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
+    val phone = remember { mutableStateOf("") }
+
+    val isLoading = viewModel.isLoading
+
+    var contest = LocalContext.current
+    var loginErr = viewModel.loginErr
     Scaffold(
         bottomBar = { BottomNavigation(navController) },
     ) { paddingValues ->
@@ -87,8 +99,8 @@ fun BookingScreen(navController: NavController){
                         .padding(top = 20.dp))
 
                     OutlinedTextField(
-                        value = textState.value, onValueChange = {
-                            textState.value = it
+                        value = name.value, onValueChange = {
+                            name.value = it
                         }, modifier = Modifier
                             .padding(top = 16.dp)
                             .fillMaxWidth()
@@ -99,8 +111,8 @@ fun BookingScreen(navController: NavController){
 
                         )
                     OutlinedTextField(
-                        value = textState.value, onValueChange = {
-                            textState.value = it
+                        value = email.value, onValueChange = {
+                            email.value = it
                         }, modifier = Modifier
                             .padding(top = 16.dp)
                             .fillMaxWidth()
@@ -111,8 +123,8 @@ fun BookingScreen(navController: NavController){
 
                         )
                     OutlinedTextField(
-                        value = textState.value, onValueChange = {
-                            textState.value = it
+                        value = phone.value, onValueChange = {
+                            phone.value = it
                         }, modifier = Modifier
                             .padding(top = 16.dp)
                             .fillMaxWidth()
@@ -122,20 +134,15 @@ fun BookingScreen(navController: NavController){
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
 
                         )
-                    
-                    Text(text = "DAte", modifier = Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxWidth()
-                        .border(1.dp, color = Purple80)
-                        .clickable { showDateDialog.value = true },)
+
                     OutlinedTextField(
-                        value = textState.value, onValueChange = {
-                            textState.value = it
+                        value = date.value, onValueChange = {
+                            date.value = it
                         }, modifier = Modifier
                             .padding(top = 16.dp)
                             .fillMaxWidth()
                             .border(1.dp, color = Purple80)
-                            .clickable { showDateDialog.value = true },
+                        ,
 
                         placeholder = { Text(text = "Date") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -145,10 +152,28 @@ fun BookingScreen(navController: NavController){
                     
                     Spacer(modifier = Modifier.height(30.dp))
                     CustomButton(text = "Submit", onClick = {
-                        navController.navigate(BloodbankScreens.AboutUs.name)
+
+
+                        if( name.value. isEmpty() or  phone.value.isEmpty() or email.value.isEmpty()){
+                            Toast.makeText(
+                                contest,
+                                "All field must be filled",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }else {
+                            Toast.makeText(
+                                contest,
+                                "Booking successful",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            navController.navigate(BloodbankScreens.AboutUs.name)
+                        }
+
                     })
 
-                    DatePickerWithDialog(modifier = Modifier,showDateDialog, dateState) { date.value = it }
+//
                 }
             }
 

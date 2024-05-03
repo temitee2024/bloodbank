@@ -174,7 +174,7 @@ Log.d("tag", "${password.value}/${repassword.value}")
 
                     else {
                         viewModel.createUserWithEmailAndPassword(email = email.value, password.value, name.value, phone.value) {
-                            navController.navigate(BloodbankScreens.AboutUs.name)
+                            navController.navigate(BloodbankScreens.BookAppontment.name)
                         }
                     }
 

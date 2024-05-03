@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bloodbank_compose.screens.AboutUsScreen
-import com.example.bloodbank_compose.screens.BookingScreen
+import com.example.bloodbank_compose.screens.Booking.BookingScreen
 import com.example.bloodbank_compose.screens.AuthScreens.LoginScreen
 import com.example.bloodbank_compose.screens.AuthScreens.SignupScreen
 
